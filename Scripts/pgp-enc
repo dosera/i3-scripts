@@ -1,0 +1,4 @@
+#!/bin/bash
+# Encrypts the current clipboard content with PGP.
+recipient=$(zenity --title 'Encrypt clipboard content' --entry --text='Please give a recipient:')
+xsel -o | gpg -ear "$recipient" --trust-model=always | xsel -b

@@ -1,0 +1,15 @@
+#!/bin/bash
+# Decrypts the current clipboard content with PGP and displays it in a zenity window.
+passphrase=$(zenity --password)
+output=$(xsel -b | gpg -d --yes --batch --passphrase "$passphrase" 2>&1)
+if [[ "$output" =~ "no valid" ]];
+then
+	zenity --info --text='No valid PGP data found in clipboard.'
+	exit 2
+elif [[ "$output" =~ "Bad passphrase" ]];
+then
+	zenity --info --text='Wrong Password!'
+	exit 2
+else
+	zenity --info --no-markup --text="$output"
+fi

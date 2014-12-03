@@ -1,0 +1,66 @@
+# Use of the standalone version of the py3status bar (https://github.com/ultrabug/py3status).
+# The elements displayed are loaded from the $py3status-modules/ folder.
+
+bar {
+	status_command py3status -s -c $i3status.conf -i $py3status-modules/
+}
+
+# Commands that are executed on i3 login.
+
+# protects the eyes (lat:lon)
+exec --no-startup-id redshift -l 48.00:7.84
+# deactivates the bios beep
+exec --no-startup-id xset b off
+# activate numpad by default
+exec --no-startup-id setleds -D +num
+# locks the screen after 10 minutes and displayes $pic
+exec --no-startup-id xautolock -time 10 -locker 'i3lock -i $pic' 	        
+
+# Start the following applications floating
+
+for_window [class="Skype"] floating enable
+for_window [class="Wine"] floating enable
+for_window [class="Spacefm" title="Errors"] floating enable
+# float for browser pop-ups
+for_window [window_role="pop-up"] floating enable
+
+# Keyboard Shortcuts
+# lock the screen with ALT+CTRL+L
+set $lock i3lock -i $pic
+bindsym Control+mod1+l exec $lock
+
+# start dmenu alternative j4-dmenu (https://github.com/enkore/j4-dmenu-desktop)
+bindsym $mod+d exec j4-dmenu-desktop
+
+# control the sound with the keyboard, refresh the status bar when changing the values
+bindsym --release XF86AudioRaiseVolume exec amixer set Master -qM playback 3%+ && killall -USR1 py3status
+bindsym --release XF86AudioLowerVolume exec amixer set Master -qM playback 3%- && killall -USR1 py3status
+bindsym --release XF86AudioMute exec amixer set Master -q toggle && killall -USR1 py3status
+
+# Screenshot with scrot
+# open the screenshot in gimp
+bindsym Print exec scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
+# select a window or a rectangle, upload the result to imgur
+# and send the corresponding upload link to the clipboard
+bindsym $mod+Print exec $imgur_file
+
+# Encrypt/Decrypt the clipboard content with PGP using zenity
+bindsym $mod+g exec $encryption_file
+bindsym $mod+b exec $decryption_file
+
+# Control the system
+mode "$system_control" {
+	# available modes
+    bindsym e exec --no-startup-id i3-msg exit
+    bindsym h exec --no-startup-id systemctl hibernate
+    bindsym l exec --no-startup-id $lock
+    bindsym d exec --no-startup-id shutdown
+    bindsym r exec --no-startup-id reboot
+    bindsym s exec --no-startup-id systemctl suspend
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+set $system_control System (e)xit, (h)ibernate, (l)ockscreen, shut(d)own, (r) reboot, (s)uspend
+bindsym $mod+Pause mode "$system_control"

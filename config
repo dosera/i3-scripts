@@ -42,7 +42,7 @@ bindsym --release XF86AudioMute exec amixer set Master -q toggle && killall -USR
 bindsym Print exec scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
 # select a window or a rectangle, upload the result to imgur
 # and send the corresponding upload link to the clipboard
-bindsym $mod+Print exec [$imgur_file](https://github.com/dosera/i3-scripts/blob/master/Scripts/imgur_upload)
+bindsym $mod+Print exec <a href="https://github.com/dosera/i3-scripts/blob/master/Scripts/imgur_upload">$imgur_file</a>
 
 # Encrypt/Decrypt the clipboard content with PGP using zenity
 bindsym $mod+g exec $encryption_file

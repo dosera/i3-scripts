@@ -1,0 +1,8 @@
+#!/bin/bash
+# take a screenshot with scrot (window or selection) and upload it to imgur
+scrot -s -e 'mv $f /tmp/ &&\
+curl -F "key=$your_api_key" -H "Expect: " -F "image=@/tmp/$f" http://imgur.com/api/upload.xml'|\
+# parse the url of the image
+perl -lne 'push @a,/\<original_image\>(.*?)\</g;END{print "@a"}'|\
+# and push it to the clipboard
+xsel -b
